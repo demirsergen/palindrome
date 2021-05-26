@@ -1,23 +1,67 @@
-import logo from './logo.svg';
 import './App.css';
+import {useState} from 'react';
 
 function App() {
+
+  const [success, setSuccess] = useState(false);
+  const [fail, setFail] = useState(false);
+
+  let input;
+  let palindrome = [];
+
+  const handleInput = (e) => {
+    input = e.target.value;
+  }
+
+  const clearPalindrome = () => {
+    palindrome = [];
+  }
+
+  const reverseWord = (value) => {
+    for(let i = (value.length - 1); i > -1; i--) {
+      const elem = value[i];
+      palindrome.push(elem);
+    }
+  }
+
+  const concatWord = () => {
+    palindrome = palindrome.join('');
+  }
+
+  const confirmMatch = () => {
+    if (input === palindrome) {
+      setSuccess(true)
+      return;
+    }
+    setFail(true)
+  }
+
+  const resetForm = () => {
+    if (fail || success) {
+      setFail(false);
+      setSuccess(false);
+    }
+  }
+
+
+  const checkPalindrome = (value) => {
+    resetForm();
+    reverseWord(value);
+    concatWord();
+    confirmMatch();
+    clearPalindrome();
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <h1 className="title">Palindrome</h1>
+        <input type="text" className="input" placeholder="enter a word..." onChange={e => handleInput(e)}/>
+        <button className="button" onClick={() => checkPalindrome(input)}>Submit</button>
+        {success && <div className="success">It's a Palindrome!</div>}
+        {fail && <div className="fail">Try again!</div>}
+      </div>
+      
     </div>
   );
 }
